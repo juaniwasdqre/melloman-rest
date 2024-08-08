@@ -6,11 +6,9 @@
 
     class DiscosApiController extends ApiController {
         private $model;
-        protected $view;
         function __construct() {
             parent::__construct();
             $this->model = new DiscosModel();
-            $this->view = new ApiView();
         }
 
         //GET
@@ -39,6 +37,21 @@
             } else {
                 $this->view->response('El disco con id:'.$id.' no existe.', 404);
             }
+        }
+
+        //POST
+        function create($params = []) {
+            $body = $this->getData();
+
+            $title = $body->title;
+            $artist = $body->artist;
+            $dyear = $body->dyear;
+            $producer = $body->producer;
+            $genre = $body->genre;
+
+            $id = $this->model->agregarDisco($title, $artist, $dyear, $producer, $genre);
+
+            $this->view->response('El disco fue agregado con el id:'.$id,201);
         }
 
         function verificarParametro($parametro) {
