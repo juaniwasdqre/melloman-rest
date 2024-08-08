@@ -58,8 +58,8 @@
                     if ($this->verificarParametro($ordenador)){
                         //verifico si $orden esta correctamente ingresado
                         if($orden=='asc'||$orden=='desc'||$orden=='ASC'||$orden=='DESC'){
-                            $albums = $this->model->getDiscosOrdered($ordenador, $orden);
-                            $this->view->response($albums, 200);
+                            $discos = $this->model->getDiscosOrdered($ordenador, $orden);
+                            $this->view->response($discos, 200);
                         }
                         else{
                             $this->view->response('el valor de ORDER no es correcto.', 400);
