@@ -13,7 +13,7 @@
                 404 => "Not found",
                 500 => "Internal server error",
             );
-            return (isset($status[$code])) ? $status[$code] : $status[500];
+            return (isset($status[$code]))? $status[$code] : $status[500];
         }
 
     }

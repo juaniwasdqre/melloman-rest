@@ -1,13 +1,44 @@
 <?php
     require_once 'app/controllers/api.controller.php';
-    require_once 'app/models/albums.model.php';
+    require_once 'app/models/discos.model.php';
+    require_once 'app/models/model.php';
+    require_once 'app/views/api.view.php';
 
-    class AlbumApiController extends ApiController {
+    class DiscosApiController extends ApiController {
         private $model;
-
+        protected $view;
         function __construct() {
             parent::__construct();
             $this->model = new DiscosModel();
+            $this->view = new ApiView();
+        }
+
+        //GET
+        function get($params = []) {
+            if (empty($params)) {
+                $discos = $this->model->getDiscos();
+                $this->view->response($discos, 200);
+            } else {
+                $disco = $this->model->getDiscoById($params[':ID']);
+                if (!empty($disco)) {
+                    $this->view->response($disco, 200);
+                } else {
+                    $this->view->response(['msg'=>'el disco con el id:'.$params[':ID'].' no existe'], 404);
+                }
+            }
+        }
+
+        //DELETE
+        function delete($params = []) {
+            $id = $params[':ID'];
+            $disco = $this->model->getDiscoById($id);
+
+            if($disco) {
+                $this->model->borrarDisco($id);
+                $this->view->response('El disco '.$disco[0]->title.' de '.$disco[0]->artist.' se borro.', 200);
+            } else {
+                $this->view->response('El disco con id:'.$id.' no existe.', 404);
+            }
         }
 
         function verificarParametro($parametro) {
@@ -16,8 +47,8 @@
             return array_key_exists($parametro, $disco);      
         }
 
-        //GET
-        function get($params = []) {
+        /* //GET
+        function get($params = null) {
             if (empty($params)){
                 //Doy la opción de mostrar albums ordenados por cada campo de la tabla
                 if(isset($_GET['sort'])&&(isset($_GET['order']))){                    
@@ -41,17 +72,5 @@
                     }                                     
                 }
             }
-        }
-
-        //DELETE
-        function delete($params = []) {
-            $id = $params[':ID'];
-            $disco = $this->model->getDiscoById($id);
-            if($disco) {
-                $this->model->borrarDisco($id);
-                $this->view->response('El disco '.$disco[0]->title.' de '.$disco[0]->artist.' se borro.', 200);
-            } else {
-                $this->view->response('El album no existe.', 404);
-            }
-        }
+        } */
     }
